@@ -109,5 +109,4 @@ trait TranslationFormTrait {
 
     return $element;
   }
-
 }

@@ -110,6 +110,18 @@ class LocalTranslationRequestForm extends TranslationRequestForm {
       $existing_translation_data = $existing_translation ? $this->translationSourceManager->extractData($existing_translation) : [];
     }
 
+    // Reorder the existing translation data deltas.
+    foreach (Element::children($data) as $key) {
+      // @todo make dynamic.
+      if ($key === 'field_link') {
+        $existing_translation_data_source = $existing_translation_data[$key];
+        foreach (Element::children($data[$key]) as $delta) {
+          $translation_id = $data[$key][$delta]['translation_id']['#text'];
+          $existing_translation_data[$key][$delta] = $this->getDeltaForTranslationId($translation_id, $existing_translation_data_source);
+        }
+      }
+    }
+
     // Disable the element if the translation request is accepted.
     $disable = $target->getStatus() === TranslationRequestLocal::STATUS_LANGUAGE_ACCEPTED;
     // Need to keep the first hierarchy. So the flattening must take place
@@ -121,6 +133,14 @@ class LocalTranslationRequestForm extends TranslationRequestForm {
     }
 
     return $form;
+  }
+
+  protected function getDeltaForTranslationId($translation_id, $existing_translation_data) {
+    foreach (Element::children($existing_translation_data) as $delta) {
+      if ($existing_translation_data[$delta]['translation_id']['#text'] === $translation_id) {
+        return $existing_translation_data[$delta];
+      }
+    }
   }
 
   /**
