@@ -9,7 +9,6 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\oe_translation_epoetry\ContentFormatter\ContentFormatterInterface;
 use GuzzleHttp\ClientInterface;
-use Http\Adapter\Guzzle7\Client;
 use OpenEuropa\EPoetry\Authentication\AuthenticationInterface;
 use OpenEuropa\EPoetry\Request\Type\AddNewPartToDossier;
 use OpenEuropa\EPoetry\Request\Type\ContactPersonIn;
@@ -80,8 +79,7 @@ class RequestFactory extends RequestClientFactory {
     }
 
     $authentication = $this->getAuthentication();
-    $http_client = new Client($guzzle);
-    parent::__construct($endpoint, $authentication, $eventDispatcher, $logger, $http_client);
+    parent::__construct($endpoint, $authentication, $eventDispatcher, $logger, $guzzle);
   }
 
   /**

@@ -7,7 +7,6 @@ namespace Drupal\oe_translation_epoetry;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Site\Settings;
 use GuzzleHttp\ClientInterface;
-use Http\Adapter\Guzzle7\Client;
 use Http\Discovery\Psr17Factory;
 use OpenEuropa\EPoetry\TicketValidation\EuLogin\EuLoginTicketValidation;
 
@@ -20,8 +19,7 @@ class NotificationTicketValidation extends EuLoginTicketValidation {
    * {@inheritdoc}
    */
   public function __construct(ClientInterface $guzzle, LoggerChannelFactoryInterface $logger_channel_factory) {
-    $http_client = new Client($guzzle);
-    parent::__construct(static::getCallbackUrl(), static::getEuLoginBasePath(), static::getEuLoginJobAccount(), new Psr17Factory(), $http_client, $logger_channel_factory->get('oe_translation_epoetry'));
+    parent::__construct(static::getCallbackUrl(), static::getEuLoginBasePath(), static::getEuLoginJobAccount(), new Psr17Factory(), $guzzle, $logger_channel_factory->get('oe_translation_epoetry'));
   }
 
   /**
